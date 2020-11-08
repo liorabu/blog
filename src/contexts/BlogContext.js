@@ -4,7 +4,12 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'add_blogpost':
 
-      return [...state, { id: Math.floor(Math.random() * 99999), title: `Blog Post #${state.length + 1}` }];
+      return [...state,
+      {
+        id: Math.floor(Math.random() * 99999),
+        title: action.payload.title,
+        content: action.payload.content
+      }];
     case 'delete_blogpost':
       return state.filter(blogpost => blogpost.id !== action.payload);
     default:
@@ -13,8 +18,9 @@ const reducer = (state, action) => {
 };
 
 const addBlogPost = dispatch => {
-  return () => {
-    dispatch({ type: 'add_blogpost' });
+  return (title, content,callback) => {
+    dispatch({ type: 'add_blogpost', payload: { title, content } });
+    callback();
   };
 };
 
@@ -26,7 +32,7 @@ const deleteBlogPost = dispatch => {
 
 export const { Context, Provider } = createDataContext(
   reducer,
-  { addBlogPost,deleteBlogPost },
+  { addBlogPost, deleteBlogPost },
   []
 );
 
@@ -34,7 +40,7 @@ export const { Context, Provider } = createDataContext(
 -----------------------------
 shallow copy
 
-data = 1;          
+data = 1;
 data2 = 3
 
 **data = 4**
