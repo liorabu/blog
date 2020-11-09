@@ -1,18 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
 import { Context } from '../contexts/BlogContext';
 import { Feather } from '@expo/vector-icons';
 
 const IndexScreen = ({ navigation }) => {
-  const { state, addBlogPost, deleteBlogPost } = useContext(Context);
+  const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
 
-  // navigation.setOptions({
-  //   headerRight: () =>
-  //     <TouchableOpacity onPress={() =>
-  //       navigation.navigate('Create')}>
-  //       <Feather name="plus" size={30} />
-  //     </TouchableOpacity>
-  // })
+  useEffect(() => {
+    getBlogPosts();
+    const listener=navigation.addListener('focus',()=>{
+      getBlogPosts();
+    });
+
+    return ()=>{
+      listener.remove();
+    }
+  }, [])
 
   return (
     <>
@@ -35,16 +38,6 @@ const IndexScreen = ({ navigation }) => {
     </>
   );
 };
-
-// IndexScreen.navigationOptions = () =>{
-//   return {
-//     headerRight: () => (
-//       <TouchableOpacity onPress={() => navigation.navigate('Create')}>
-//         <Feather name="plus" size={30} />
-//       </TouchableOpacity>
-//     ),
-//   };
-// }
 
 const styles = StyleSheet.create({
   row: {
